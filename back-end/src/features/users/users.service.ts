@@ -1,11 +1,12 @@
-import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
-import { generateHash } from 'src/util/password-hashing';
+import { ForbiddenException, Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { generateHash } from '../../util/password-hashing';
 import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
 
 @Injectable()
 export class UsersService {
+
+  private readonly logger = new Logger(UsersService.name);
 
   private usersList: User[] = [
     {
@@ -19,16 +20,19 @@ export class UsersService {
   async create(createUserDto: CreateUserDto): Promise<User> {
     const { email, password } = createUserDto;
 
-    const existRecord = this.usersList.find((user: User) => user.email === email);
-    console.log(existRecord);
+    const existRecord = this.findOneByEmail(email);
+    
     if (existRecord) {
+      this.logger.error(`email already exist`);
       throw new ForbiddenException("Entered email address already added.")
     }
 
     const newUser: User = new User({...createUserDto });
     
-    //create hash password
+    //creating hash password
     const hash = await generateHash(password);
+    this.logger.debug(`password hash was created`);
+
     newUser.password = hash;
     
     this.usersList.push(newUser);
@@ -45,6 +49,7 @@ export class UsersService {
   findOneByEmail(email: string) {
     const user = this.usersList.find(user => user.email === email);
     if (!user) {
+      this.logger.error(`email already exist`);
       throw new NotFoundException("User not found.")
     }
     return user;

@@ -1,5 +1,5 @@
 import * as bcrypt from 'bcrypt';
-import { SALT } from 'src/environments';
+import { SALT } from '../../environments';
 
 const  generateHash = async (password:string) : Promise<string>=> {
     return await bcrypt.hash(password, SALT);
