@@ -1,4 +1,5 @@
 import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
+import { generateHash } from 'src/util/password-hashing';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
@@ -8,32 +9,37 @@ export class UsersService {
 
   private usersList: User[] = [
     {
-      email: "yoshan@gmail.com",
-      firstName: "yoshan",
-      lastName: "amarathunga",
-      password: "1234556JU"
+      email: "ricky@mainhost.com",
+      firstName: "Ricky",
+      lastName: "Martin",
+      password: "$2b$10$CKDyuCWgaXc0RzHobGHxSeQrFO.BMBpYx.QQfwuatgDDHhrnUnhlq"
     }
   ];
 
-  create(createUserDto: CreateUserDto): User {
-    const { email } = createUserDto;
+  async create(createUserDto: CreateUserDto): Promise<User> {
+    const { email, password } = createUserDto;
 
     const existRecord = this.usersList.find((user: User) => user.email === email);
     console.log(existRecord);
     if (existRecord) {
       throw new ForbiddenException("Entered email address already added.")
     }
-    const newUser: User = new User({ ...createUserDto });
+
+    const newUser: User = new User({...createUserDto });
+    
+    //create hash password
+    const hash = await generateHash(password);
+    newUser.password = hash;
+    
     this.usersList.push(newUser);
     return newUser;
   }
 
-  findAll(): User[] {
-    return this.usersList;
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
+  findAll(): any {
+    return this.usersList.map(user => {
+      const {password, ...rest} = user;
+      return rest;
+    });
   }
 
   findOneByEmail(email: string) {
@@ -44,11 +50,4 @@ export class UsersService {
     return user;
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} user`;
-  }
 }
