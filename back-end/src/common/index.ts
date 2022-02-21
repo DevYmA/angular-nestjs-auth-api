@@ -1,0 +1,1 @@
+export * from './decorators/principal-guard.decorator'
