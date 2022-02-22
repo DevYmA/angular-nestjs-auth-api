@@ -1,6 +1,6 @@
 import { Component, ViewContainerRef } from '@angular/core';
 import { ModalService } from 'ya-custom-modal-lib';
-import { ModalConfiguration } from 'ya-custom-modal-lib';
+// import { ModalConfiguration } from 'ya-custom-modal-lib';
 
 @Component({
   selector: 'app-root',
@@ -10,7 +10,7 @@ import { ModalConfiguration } from 'ya-custom-modal-lib';
 export class AppComponent {
   title = 'front-end';
 
-  preDefinedConfig: ModalConfiguration[] = [
+  preDefinedConfig: any[] = [
     {
       viewContainerRef: this.containerReference,
       title: 'one',
@@ -46,18 +46,18 @@ export class AppComponent {
     let obj = this
     var startTime = new Date().getTime();
     var interval = setInterval(function () {
-      if (new Date().getTime() - startTime > 40000) {
+      if (new Date().getTime() - startTime > 10000) {
         clearInterval(interval);
         return;
       }
       obj.openModal();
-    }, 1000);
+    }, 500);
   }
 
   openModal() {
     let randomNo = Math.floor(Math.random() * 2);
     this.modalService.openModel(this.preDefinedConfig[randomNo]).subscribe((res) => {
-
+        console.log(`*********************** > ${res}`)
     });
   }
 }
