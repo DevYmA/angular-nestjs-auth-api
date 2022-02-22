@@ -1,7 +1,7 @@
 # Angular FrontEnd
 
 
-## Screen cast of implementation(Custom Modal Library)
+## Screencast of implementation(Custom Modal Library)
 
 ![modal_demo](https://user-images.githubusercontent.com/21299910/155066142-1a4438af-2649-4ed1-b59d-cb0090accb83.gif)
 
