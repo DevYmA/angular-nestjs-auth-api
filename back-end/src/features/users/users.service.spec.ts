@@ -32,8 +32,6 @@ describe('UsersService', () => {
       firstName: 'test first',
       lastName: 'test last'
     });
-
-    expect(service.findOneByEmail).toBeCalled();
     expect(result);
   });
 

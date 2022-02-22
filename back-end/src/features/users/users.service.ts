@@ -20,7 +20,7 @@ export class UsersService {
   async create(createUserDto: CreateUserDto): Promise<User> {
     const { email, password } = createUserDto;
 
-    const existRecord = this.findOneByEmail(email);
+    const existRecord = this.usersList.find(user => user.email === email);
     
     if (existRecord) {
       this.logger.error(`email already exist`);
